@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.infopush.PushServer.Dao.UserRoleMapper">
+  <resultMap id="BaseResultMap" type="com.infopush.PushServer.Entity.UserRole">
+    <result column="uid" jdbcType="BIGINT" property="uid" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+  </resultMap>
+   <select id="getUserRole" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    uid, role_id
+    from user_role
+    where uid = #{uid,jdbcType=BIGINT}
+  </select>
+  <insert id="insert" parameterType="com.infopush.PushServer.Entity.UserRole">
+    insert into user_role (uid, role_id)
+    values (#{uid,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.infopush.PushServer.Entity.UserRole">
+    insert into user_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="uid != null">
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+</mapper>
