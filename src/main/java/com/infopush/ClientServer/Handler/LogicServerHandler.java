@@ -39,16 +39,17 @@ public class LogicServerHandler extends ChannelInboundHandlerAdapter{
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		String jsonstr=(String)msg;
+		BaseMsg jsonstr=(BaseMsg)msg;
 		
 		
-		log.info(jsonstr);
+		log.info(jsonstr.toString());
 		BaseMsg tmpmsg=new BaseMsg();
 		tmpmsg.setCmd(3);
 		tmpmsg.setDestId(2);
 		tmpmsg.setSrcId(1);
 		tmpmsg.setPayload("attach");
-		ctx.writeAndFlush(tmpmsg);
+		ctx.writeAndFlush(jsonstr);
+		
 			
 //		Message.MessageBase msgBase = (Message.MessageBase)msg;
 //

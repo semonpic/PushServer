@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.infopush.PushServer.Dao.ClientGroupMapper">
+  <resultMap id="BaseResultMap" type="com.infopush.PushServer.Entity.ClientGroup">
+    <id column="Id" jdbcType="INTEGER" property="id" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="parent_tg_id" jdbcType="INTEGER" property="parentTgId" />
+    <result column="creattime" jdbcType="TIMESTAMP" property="creattime" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <collection property="childlist" column="Id" 
+                ofType="com.infopush.PushServer.Entity.ClientGroup"
+                select="selectByParentId"
+                ></collection>
+  </resultMap>
+  <sql id="Base_Column_List">
+    Id, group_name, parent_tg_id, creattime, description
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from clientgroup
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByParentId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from clientgroup
+    where parent_tg_id = #{pid,jdbcType=INTEGER}
+  </select>
+  
+    <select id="selectAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from clientgroup
+    where parent_tg_id = -1;
+  </select>
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from clientgroup
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.infopush.PushServer.Entity.ClientGroup">
+    insert into clientgroup (Id, group_name, parent_tg_id, 
+      creattime, description)
+    values (#{id,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, #{parentTgId,jdbcType=INTEGER}, 
+      #{creattime,jdbcType=TIMESTAMP}, #{description,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.infopush.PushServer.Entity.ClientGroup">
+    insert into clientgroup
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        Id,
+      </if>
+      <if test="groupName != null">
+        group_name,
+      </if>
+      <if test="parentTgId != null">
+        parent_tg_id,
+      </if>
+      <if test="creattime != null">
+        creattime,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentTgId != null">
+        #{parentTgId,jdbcType=INTEGER},
+      </if>
+      <if test="creattime != null">
+        #{creattime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.infopush.PushServer.Entity.ClientGroup">
+    update clientgroup
+    <set>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentTgId != null">
+        parent_tg_id = #{parentTgId,jdbcType=INTEGER},
+      </if>
+      <if test="creattime != null">
+        creattime = #{creattime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.infopush.PushServer.Entity.ClientGroup">
+    update clientgroup
+    set group_name = #{groupName,jdbcType=VARCHAR},
+      parent_tg_id = #{parentTgId,jdbcType=INTEGER},
+      creattime = #{creattime,jdbcType=TIMESTAMP},
+      description = #{description,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

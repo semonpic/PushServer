@@ -2,16 +2,17 @@ package com.infopush.ClientServer.Msg;
 
 public class BaseMsg {
 	
-	public long getSrcId() {
+	
+	public int getSrcId() {
 		return srcId;
 	}
-	public void setSrcId(long srcId) {
+	public void setSrcId(int srcId) {
 		this.srcId = srcId;
 	}
-	public long getDestId() {
+	public int getDestId() {
 		return destId;
 	}
-	public void setDestId(long destId) {
+	public void setDestId(int destId) {
 		this.destId = destId;
 	}
 	public int getCmd() {
@@ -26,8 +27,13 @@ public class BaseMsg {
 	public void setPayload(String payload) {
 		this.payload = payload;
 	}
-	long srcId=0;
-	long destId=0;
+	int srcId=0;
+	int destId=0;
 	int cmd=0;
 	String payload;
+	@Override
+	public String toString() {
+		return "BaseMsg [srcId=" + srcId + ", destId=" + destId + ", cmd=" + cmd + ", payload=" + payload + "]";
+	}
+	
 }

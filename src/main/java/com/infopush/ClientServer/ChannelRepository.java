@@ -11,17 +11,17 @@ import io.netty.channel.Channel;
  *
  */
 public class ChannelRepository {
-	private final static Map<String, Channel> channelCache = new ConcurrentHashMap<String, Channel>();
+	private final static Map<Integer, Channel> channelCache = new ConcurrentHashMap<Integer, Channel>();
 
-	public void put(String key, Channel value) {
+	public void put(Integer key, Channel value) {
 		channelCache.put(key, value);
 	}
 
-	public Channel get(String key) {
+	public Channel get(Integer key) {
 		return channelCache.get(key);
 	}
 
-	public void remove(String key) { 
+	public void remove(Integer key) { 
 		channelCache.remove(key);
 	}
 

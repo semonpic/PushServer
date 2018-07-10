@@ -59,12 +59,21 @@
             enableUpdateByExample="false" enableDeleteByExample="false">
 
        </table>
-        -->
+        
        <table tableName="fileinfo" domainObjectName="FileInfo"
             enableCountByExample="false" enableSelectByExample="false"
             enableUpdateByExample="false" enableDeleteByExample="false">
-
        </table>
+              <table tableName="clientgroup" domainObjectName="ClientGroup"
+            enableCountByExample="false" enableSelectByExample="false"
+            enableUpdateByExample="false" enableDeleteByExample="false">
+       </table>
+       -->
+       <table tableName="client" domainObjectName="ClientInfo"
+            enableCountByExample="false" enableSelectByExample="false"
+            enableUpdateByExample="false" enableDeleteByExample="false">
+       </table>
+
     </context>
 
 </generatorConfiguration>

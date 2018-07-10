@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.alibaba.druid.sql.ast.statement.SQLIfStatement.Else;
 import com.infopush.ClientServer.ChannelRepository;
+import com.infopush.ClientServer.Msg.BaseMsg;
 import com.infopush.ClientServer.ProtoBuf.Command.CommandType;
 import com.infopush.ClientServer.ProtoBuf.Message.MessageBase;
-
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -31,7 +32,7 @@ import io.netty.util.ReferenceCountUtil;
 @ChannelHandler.Sharable
 public class AuthServerHandler extends ChannelInboundHandlerAdapter {
 	public Logger log = Logger.getLogger(this.getClass());
-	private final AttributeKey<String> clientInfo = AttributeKey.valueOf("clientInfo");
+	private final AttributeKey<Integer> clientInfo = AttributeKey.valueOf("clientInfo");
 	
 	@Autowired
 	@Qualifier("channelRepository")
@@ -40,28 +41,41 @@ public class AuthServerHandler extends ChannelInboundHandlerAdapter {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		MessageBase msgBase = (MessageBase)msg;
-		String clientId = msgBase.getClientId();
+		//MessageBase msgBase = (MessageBase)msg;
+		//String clientId = msgBase.getClientId();
+		BaseMsg baseMsg=(BaseMsg)msg;
+		Integer clientId=baseMsg.getSrcId();
 		
 		Channel ch = channelRepository.get(clientId);
 		if(null == ch){
 			ch = ctx.channel();
 			channelRepository.put(clientId, ch);
 		}
+		
 		/*认证处理*/
-		if(msgBase.getCmd().equals(CommandType.AUTH)){
+		if(baseMsg.getCmd()==Command.CMD_AUTH){
 			log.info("我是验证处理逻辑");
-			Attribute<String> attr = ctx.attr(clientInfo);
+			Attribute<Integer> attr = ctx.attr(clientInfo);
 			attr.set(clientId);
 			channelRepository.put(clientId, ctx.channel());
 			
-			ctx.writeAndFlush(createData(clientId, CommandType.AUTH_BACK, "This is response data").build());
+			ctx.writeAndFlush(createData(baseMsg.getSrcId(),baseMsg.getDestId(), Command.CMD_AUTHBACK, "This is response data"));
 		
-		}else if(msgBase.getCmd().equals(CommandType.PING)){
+		}else if(baseMsg.getCmd()==Command.CMD_PING){
 			//处理ping消息
-			ctx.writeAndFlush(createData(clientId, CommandType.PONG, "This is pong data").build());
+			ctx.writeAndFlush(createData(baseMsg.getSrcId(),baseMsg.getDestId(), Command.CMD_PONG, "This is pong data"));
 		
-		}else{
+		}else if (baseMsg.getDestId()!=0) { //如果desid 为零就是转发消息，执行消息转发
+			Channel destch = channelRepository.get(baseMsg.getDestId());
+			if((destch!=null)&&(destch.isActive())){
+				destch.writeAndFlush(baseMsg);
+			}else {
+				ctx.writeAndFlush(createData(baseMsg.getSrcId(),baseMsg.getDestId(), Command.CMD_PROXY_ERROR, null));	
+			}
+			
+			
+		}
+		else{
 			if(ch.isOpen()){
 				//触发下一个handler
 				ctx.fireChannelRead(msg);
@@ -70,11 +84,12 @@ public class AuthServerHandler extends ChannelInboundHandlerAdapter {
 		}
 		ReferenceCountUtil.release(msg);
 	}
-	private MessageBase.Builder createData(String clientId, CommandType cmd,String data){
-		MessageBase.Builder msg = MessageBase.newBuilder();
-		msg.setClientId(clientId);
+	private BaseMsg createData(int _descid,int _srcid, int cmd,String data){
+		BaseMsg msg=new BaseMsg();
+		msg.setDestId(_descid);
+		msg.setSrcId(_srcid);
 		msg.setCmd(cmd);
-		msg.setData(data);
+		msg.setPayload(data);
 		return msg;
 	}
 }

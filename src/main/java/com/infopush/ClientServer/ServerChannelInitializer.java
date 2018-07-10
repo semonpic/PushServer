@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.infopush.ClientServer.Handler.IdleServerHandler;
 import com.infopush.ClientServer.Handler.JsonToStringEncoder;
+import com.infopush.ClientServer.Handler.StringToJsonDecoder;
 import com.infopush.ClientServer.ProtoBuf.Message.MessageBase;
 import com.infopush.PushServer.Constant;
 
@@ -60,10 +61,10 @@ public class ServerChannelInitializer extends ChannelInitializer<SocketChannel> 
         // p.addLast(new ProtobufEncoder());
 	    
 	    p.addLast("Frame",new DelimiterBasedFrameDecoder(2048, delimiter));
-	    p.addLast("decoder", new StringDecoder(Charset.forName("UTF-8")));
+	    p.addLast("decoder", new StringToJsonDecoder(Charset.forName("UTF-8")));
 	   // p.addLast("encoder", new StringEncoder(Charset.forName("UTF-8"))); 
 	    p.addLast("encoder", new JsonToStringEncoder(Charset.forName("UTF-8")));
-        //p.addLast("authServerHandler", authServerHandler);
+        p.addLast("authServerHandler", authServerHandler);
         p.addLast("hearableServerHandler", logicServerHandler);
     }
 }
