@@ -68,12 +68,18 @@
             enableCountByExample="false" enableSelectByExample="false"
             enableUpdateByExample="false" enableDeleteByExample="false">
        </table>
-       -->
+       
        <table tableName="client" domainObjectName="ClientInfo"
             enableCountByExample="false" enableSelectByExample="false"
             enableUpdateByExample="false" enableDeleteByExample="false">
        </table>
-
+       -->
+       
+       <table tableName="activity" domainObjectName="ActivityInfo"
+            enableCountByExample="false" enableSelectByExample="false"
+            enableUpdateByExample="false" enableDeleteByExample="false">
+       </table>  
+       
     </context>
 
 </generatorConfiguration>

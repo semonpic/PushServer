@@ -15,7 +15,12 @@ public class User {
 
     private Short disabled;
 
-    private Date createtime;
+    @Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + "]";
+	}
+
+	private Date createtime;
 
     private Date lasttime;
 

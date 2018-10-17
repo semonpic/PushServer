@@ -117,7 +117,6 @@ public class FileControl {
 			@RequestParam(value="file") MultipartFile file,
 			@RequestParam(value="chunk") int chunk,
 			@RequestParam(value="chunks") int chunks){
-		
 		MyLogUtils.getInstance().log("开始上传文件");
 		//return fileService.upload(fileName,file,chunk,chunks);
 		return fileService.uploadRandomAccessFile(fileName,file,chunk,chunks);

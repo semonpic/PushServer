@@ -178,7 +178,11 @@ public class FileServiceImpl implements FileService {
 	        UploadStatus uploadStatus = new UploadStatus();
 	        if (successChunks==chunks) {
 	        	File fileo = new File(path, tempFileName);
-	        	boolean flag =fileo .renameTo(new File(path + fileName+suffixName));
+	        	File rnameFile=new File(path + fileName+suffixName);
+	        	boolean flag=true;
+	        	if(!rnameFile.exists()){
+	        	   flag =fileo.renameTo(rnameFile);
+	        	}
 	            //boolean flag = renameFile(tmpFile, fileName);
 	            System.out.println("upload complete !!" + flag + " name=" + fileName+suffixName);
 	            if(flag==true){
@@ -218,10 +222,12 @@ public class FileServiceImpl implements FileService {
 			{
 				result.setErrcode(0);
 				result.setData("NoExist");
+				result.setErrmsg("NoExist");
 			}
 			else {
 				result.setErrcode(0);
 				result.setData("Exist");
+				result.setErrmsg("Exist");
 			}
 		} catch (java.lang.Exception e) {
 			result.setErrcode(1);

@@ -12,6 +12,8 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.infopush.PushServer.Model.UserSession;
+
 
 
 //@CacheConfig(cacheNames = "token")
@@ -21,7 +23,7 @@ public class TokenUtil {
 	@Autowired
 	private  CacheManager cacheManager;
 	@CachePut(value="token",key="#p0")
-	public  String PutToken(String key,List<String> roll){
+	public  UserSession PutToken(String key,UserSession userSession){
 		
 //		Cache cache=cacheManager.getCache("token");
 //		
@@ -32,17 +34,12 @@ public class TokenUtil {
 //			return vString;
 //		}
 //		
-		StringBuilder stringBuilder=new StringBuilder();
-		for (String string : roll) {
-			
-			stringBuilder.append(string);
-			stringBuilder.append(":");
-		}
-		return stringBuilder.toString();
+		System.out.println("缓存写入");
+		return userSession;
 		
 	}
 	@Cacheable(value="token")
-	public  String  GetToken(String key) {
+	public  UserSession GetToken(String key) {
 		System.out.println("没走缓存");
 		return null;
 	}

@@ -9,4 +9,5 @@ public interface UserService {
     public User getUserById(Long userId);
     int addUser(User record);
     JsonResult<LoginRuselt> login(LoginFormModel model);
+    JsonResult<Boolean> addUser(String token,String name);
 }

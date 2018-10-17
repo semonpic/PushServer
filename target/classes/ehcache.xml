@@ -29,9 +29,10 @@
     <cache name="token"
            maxElementsInMemory="1000"
            eternal="false"
-           timeToIdleSeconds="0"
+           timeToIdleSeconds="86400"
            overflowToDisk="false"
            memoryStoreEvictionPolicy="LRU"
      /> 
-             
+        
+          
 </ehcache>

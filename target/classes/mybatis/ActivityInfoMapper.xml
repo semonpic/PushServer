@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.infopush.PushServer.Dao.ActivityInfoMapper">
+  <resultMap id="BaseResultMap" type="com.infopush.PushServer.Entity.ActivityInfo">
+    <id column="Id" jdbcType="INTEGER" property="id" />
+    <result column="Name" jdbcType="VARCHAR" property="name" />
+    <result column="userid" jdbcType="BIGINT" property="userid" />
+    <result column="creattime" jdbcType="TIMESTAMP" property="creattime" />
+    <result column="updatetime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="md5" jdbcType="VARCHAR" property="name" />
+    
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.infopush.PushServer.Entity.ActivityInfo">
+    <result column="jsonstr" jdbcType="LONGVARCHAR" property="jsonstr" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    Id, Name, userid, creattime, updatetime,md5
+  </sql>
+  <sql id="Blob_Column_List">
+    jsonstr
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from activity
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+  
+    <select id="selectByName" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from activity
+    where Name = #{name,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from activity
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.infopush.PushServer.Entity.ActivityInfo">
+    insert into activity (Id, Name, userid, 
+      creattime, updatetime, jsonstr,md5
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{userid,jdbcType=BIGINT}, 
+      #{creattime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{jsonstr,jdbcType=LONGVARCHAR},
+      #{md5,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.infopush.PushServer.Entity.ActivityInfo">
+    insert into activity
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        Id,
+      </if>
+      <if test="name != null">
+        Name,
+      </if>
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="creattime != null">
+        creattime,
+      </if>
+      <if test="updatetime != null">
+        updatetime,
+      </if>
+      <if test="jsonstr != null">
+        jsonstr,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="creattime != null">
+        #{creattime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jsonstr != null">
+        #{jsonstr,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.infopush.PushServer.Entity.ActivityInfo">
+    update activity
+    <set>
+      <if test="name != null">
+        Name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="creattime != null">
+        creattime = #{creattime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="jsonstr != null">
+        jsonstr = #{jsonstr,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.infopush.PushServer.Entity.ActivityInfo">
+    update activity
+    set Name = #{name,jdbcType=VARCHAR},
+      userid = #{userid,jdbcType=BIGINT},
+      creattime = #{creattime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      jsonstr = #{jsonstr,jdbcType=LONGVARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.infopush.PushServer.Entity.ActivityInfo">
+    update activity
+    set Name = #{name,jdbcType=VARCHAR},
+      userid = #{userid,jdbcType=BIGINT},
+      creattime = #{creattime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  
+   <update id="updateByName" parameterType="com.infopush.PushServer.Entity.ActivityInfo">
+    update activity
+    set updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      jsonstr = #{jsonstr,jdbcType=LONGVARCHAR},
+      md5 = #{md5,jdbcType=VARCHAR}
+    where Name = #{name,jdbcType=VARCHAR}
+  </update>
+  
+</mapper>

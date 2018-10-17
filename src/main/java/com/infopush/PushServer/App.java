@@ -32,7 +32,7 @@ import io.netty.handler.logging.LoggingHandler;
 
 @SpringBootApplication
 @MapperScan({"com.infopush.PushServer.Dao","com.infopush.PushServer.ServiceImpl","com.infopush.ClientServer"})
-@ComponentScan(basePackages={"com.infopush.ClientServer"})
+@ComponentScan(basePackages={"com.infopush.ClientServer","com.infopush.PushServer"})
 @EnableCaching
 public class App 
 {

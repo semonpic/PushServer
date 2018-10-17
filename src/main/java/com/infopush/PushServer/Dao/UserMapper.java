@@ -12,7 +12,7 @@ public interface UserMapper {
 	@CacheEvict
     int deleteByPrimaryKey(Long id);
 	
-	@CachePut(key="#user.id")
+	//@CachePut(key="#user.id")
     int insert(User record);
 
     int insertSelective(User record);

@@ -15,4 +15,6 @@ public interface FileService {
 	 //
 	JsonResult<UploadStatus> uploadRandomAccessFile(	String fileName,MultipartFile file,int chunk,int chunks);
 	JsonResult<String> checkFileExistByMd5(String md5str);
+	
+	
 }

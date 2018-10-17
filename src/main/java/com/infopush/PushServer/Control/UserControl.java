@@ -1,5 +1,7 @@
 package com.infopush.PushServer.Control;
 
+import static org.hamcrest.CoreMatchers.nullValue;
+
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -13,6 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,28 +50,26 @@ public class UserControl {
 	    return result;
 	}
 	
-	@RequestMapping("/login")
-	public JsonResult<LoginRuselt> login(@Valid @RequestBody LoginFormModel formModel,BindingResult result)
+	
+	
+	
+	@RequestMapping(value="/login", method=RequestMethod.POST)
+	public JsonResult<LoginRuselt> login(@RequestParam(value="name") String name,@RequestParam(value="pwd") String pwd)
 	{
 		JsonResult<LoginRuselt> res=new JsonResult<LoginRuselt>();
-		
-		if (result.hasErrors()) {
-            // 0101 存储错误信息的字符串变量
-            StringBuffer msgBuffer = new StringBuffer();
-            // 0102 错误字段集合
-            List<FieldError> fieldErrors = result.getFieldErrors();
-            for (FieldError fieldError : fieldErrors) {
-                // 0103 获取错误信息
-                msgBuffer.append(fieldError.getField() + ":" + fieldError.getDefaultMessage());
-            }
-            res.setErrcode(1);
-            res.setErrmsg(msgBuffer.toString());
-        }
-		
+		LoginFormModel formModel=new LoginFormModel();
+		formModel.setUserName(name);
+		formModel.setPwd(pwd);
 		return userService.login(formModel);
 	}
 	
-
+	@RequestMapping(value="/add", method=RequestMethod.POST)
+	public JsonResult<Boolean> useradd(@RequestParam(value="name") String name,@RequestParam(value="token") String token)
+	{
+		JsonResult<LoginRuselt> res=new JsonResult<LoginRuselt>();
+		
+		return userService.addUser(token, name);
+	}
 
 	
 }

@@ -3,6 +3,7 @@ package com.infopush.PushServer.ServiceImpl;
 import static org.hamcrest.CoreMatchers.nullValue;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -10,6 +11,7 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.infopush.PushServer.RoolContant;
 import com.infopush.PushServer.Dao.RoleMapper;
 import com.infopush.PushServer.Dao.UserMapper;
 import com.infopush.PushServer.Dao.UserRoleMapper;
@@ -19,8 +21,10 @@ import com.infopush.PushServer.Entity.User;
 import com.infopush.PushServer.Entity.UserRole;
 import com.infopush.PushServer.Model.LoginFormModel;
 import com.infopush.PushServer.Model.LoginRuselt;
+import com.infopush.PushServer.Model.UserSession;
 import com.infopush.PushServer.Service.UserService;
 import com.infopush.PushServer.Utils.EncryptUtils;
+import com.infopush.PushServer.Utils.UUIDUtil;
 
 import javassist.expr.NewArray;
 import lombok.Data;
@@ -62,14 +66,10 @@ public class UserServiceImpl implements UserService {
 				if(role!=null)
 				{
 					rolelist.add(role.getName());
-					
 				}
-				
-				
 			}
 			
 		}
-		
 		return  rolelist;
 	}
 	
@@ -84,18 +84,18 @@ public class UserServiceImpl implements UserService {
 			String tmpmd5=EncryptUtils.encryptMD5(model.getPwd(),tmpUser.getSalt());
 			
 			if(tmpmd5.equals(tmpUser.getPassword()))
-			{
-				
+			{				
 				List<String> rollList=getRoleById(tmpUser.getId());
+				UserSession userSession=new UserSession(tmpUser, rollList);
 				LoginRuselt res=new LoginRuselt();
 				res.setUserId(tmpUser.getId());
 				res.setUserName(tmpUser.getUsername());
-				res.setToken(tmpUser.getPassword());
-				tokenUtil.PutToken(res.getToken(), rollList);
+				res.setToken(UUIDUtil.getUUID32());
+				tokenUtil.PutToken(res.getToken(), userSession);
 				res.setRole(rollList);
 				result.setErrcode(0);
 				result.setData(res);
-			
+				
 				System.out.println(tokenUtil.GetToken(res.getToken()));
 			}
 			else {
@@ -105,6 +105,36 @@ public class UserServiceImpl implements UserService {
 			
 			result.setErrcode(1);
 			result.setErrmsg("用户名或密码错误");
+		}
+		return result;
+	}
+
+	@Override
+	public JsonResult<Boolean> addUser(String token, String name) {
+		JsonResult<Boolean> result=new JsonResult<Boolean>();
+		result.setErrcode(0);
+		result.setData(false);
+		UserSession userSession=tokenUtil.GetToken(token);
+		if(userSession.hasRool(RoolContant.ROOL_ADDUSER))
+		{
+			User tmpuser=new User();
+			tmpuser.setId(null);
+			tmpuser.setUsername(name);
+			tmpuser.setCreatetime(new Date());
+			tmpuser.setDisabled((short) 1);
+			tmpuser.setEmail("");
+			tmpuser.setLasttime(new Date());
+			tmpuser.setSalt(UUIDUtil.getUUID32());
+			tmpuser.setPassword(EncryptUtils.encryptMD5("123456",tmpuser.getSalt()));
+			try {
+				userDao.insert(tmpuser);
+				result.setErrcode(0);
+				result.setData(true);
+			} catch (Exception e) {
+				result.setErrcode(0);
+				result.setData(false);
+			}
+			
 		}
 		return result;
 	}
